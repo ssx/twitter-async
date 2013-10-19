@@ -89,9 +89,6 @@ class EpiTwitter extends EpiOAuth
   private function request($method, $endpoint, $params = null)
   {
     $url = $this->getUrl($this->getApiUrl($endpoint));
-
-	echo "URL: '$url' \n";
-
     $resp= new \SSX\EpiTwitterJson(call_user_func(array($this, 'httpRequest'), $method, $url, $params, $this->isMultipart($params)), $this->debug);
     if(!$this->isAsynchronous)
       $resp->response;
