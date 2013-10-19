@@ -1,4 +1,6 @@
 <?php
+namespace SSX;
+
 class EpiCurl
 {
   const timeout = 3;
@@ -19,7 +21,7 @@ class EpiCurl
   {
     if(self::$singleton == 0)
     {
-      throw new Exception('This class cannot be instantiated by the new keyword.  You must instantiate it using: $obj = EpiCurl::getInstance();');
+      throw new \Exception('This class cannot be instantiated by the new keyword.  You must instantiate it using: $obj = EpiCurl::getInstance();');
     }
 
     $this->mc = curl_multi_init();
@@ -40,7 +42,7 @@ class EpiCurl
     $done = array('handle' => $ch);
     $this->storeResponse($done, false);
     $this->startTimer($key);
-    return new EpiCurlManager($key);
+    return new \SSX\EpiCurlManager($key);
   }
 
   public function addCurl($ch)
@@ -51,7 +53,7 @@ class EpiCurl
 
     $code = curl_multi_add_handle($this->mc, $ch);
     $this->startTimer($key);
-    
+
     // (1)
     if($code === CURLM_OK || $code === CURLM_CALL_MULTI_PERFORM)
     {
@@ -59,7 +61,7 @@ class EpiCurl
           $code = $this->execStatus = curl_multi_exec($this->mc, $this->running);
       } while ($this->execStatus === CURLM_CALL_MULTI_PERFORM);
 
-      return new EpiCurlManager($key);
+      return new \SSX\EpiCurlManager($key);
     }
     else
     {
@@ -105,7 +107,7 @@ class EpiCurl
 
   public static function getSequence()
   {
-    return new EpiSequence(self::$timers);
+    return new \SSX\EpiSequence(self::$timers);
   }
 
   public static function getTimers()
@@ -175,7 +177,7 @@ class EpiCurl
     if(self::$inst == null)
     {
       self::$singleton = 1;
-      self::$inst = new EpiCurl();
+      self::$inst = new \SSX\EpiCurl();
     }
 
     return self::$inst;

@@ -1,11 +1,13 @@
 <?php
+namespace SSX;
+
 class EpiSequence
 {
   private $timers, $min, $max, $width = 100;
-  public function __construct($timers) 
+  public function __construct($timers)
   {
     $this->timers = $timers;
-    
+
     $min = PHP_INT_MAX;
     $max = 0;
     foreach($this->timers as $timer)
@@ -24,7 +26,7 @@ class EpiSequence
     $tpl = '';
     foreach($this->timers as $timer)
      $tpl .= $this->tplAscii($timer);
-    
+
     return $tpl;
   }
 
@@ -43,7 +45,7 @@ class EpiSequence
       $chars = str_repeat('=', $mpad);
     if($rpad > 0)
       $rspace = str_repeat(' ', $rpad);
-    
+
     $tpl = <<<TPL
 ({$timer['api']} ::  code={$timer['code']}, start={$timer['start']}, end={$timer['end']}, total={$timer['time']})
 [{$lspace}{$chars}{$rspace}]

@@ -12,3 +12,5 @@ Thumbs.db
 __MACOSX
 
 # Project Specific
+TestCredentials.php
+vendor

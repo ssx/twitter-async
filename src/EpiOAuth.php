@@ -1,4 +1,6 @@
 <?php
+namespace SSX;
+
 class EpiOAuth
 {
   public $version = '1.0';
@@ -36,11 +38,11 @@ class EpiOAuth
       $params['oauth_verifier'] = $_GET['oauth_verifier'];
     }
     $resp = $this->httpRequest('POST', $this->getUrl($this->accessTokenUrl), $params);
-    return new EpiOAuthResponse($resp);
+    return new \SSX\EpiOAuthResponse($resp);
   }
 
   public function getAuthenticateUrl($token = null, $params = null)
-  { 
+  {
     $token = $token ? $token : $this->getRequestToken($params);
     if (is_object($token)) $token = $token->oauth_token;
     $addlParams = empty($params) ? '' : '&'.http_build_query($params, '', '&');
@@ -56,7 +58,7 @@ class EpiOAuth
 
   // DEPRECATED in favor of getAuthorizeUrl()
   public function getAuthorizationUrl($token = null)
-  { 
+  {
     return $this->getAuthorizeUrl($token);
   }
 
@@ -67,7 +69,7 @@ class EpiOAuth
       $params['oauth_callback'] = $this->callback;
     }
     $resp = $this->httpRequest('POST', $this->getUrl($this->requestTokenUrl), $params);
-    return new EpiOAuthResponse($resp);
+    return new \SSX\EpiOAuthResponse($resp);
   }
 
   public function getUrl($url)
@@ -162,7 +164,7 @@ class EpiOAuth
   {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers); 
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
     curl_setopt($ch, CURLOPT_TIMEOUT, $this->requestTimeout);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->connectionTimeout);
     curl_setopt($ch, CURLOPT_ENCODING, '');
@@ -350,7 +352,7 @@ class EpiOAuth
           $hasFile = true;
         }
       }
-      
+
       if($hasFile === true)
         $sigParams = array();
     }
@@ -418,7 +420,7 @@ class EpiOAuthResponse
   }
 }
 
-class EpiOAuthException extends Exception
+class EpiOAuthException extends \Exception
 {
   public static function raise($response, $debug)
   {
@@ -427,11 +429,11 @@ class EpiOAuthException extends Exception
     switch($response->code)
     {
       case 400:
-        throw new EpiOAuthBadRequestException($message, $response->code);
+        throw new \SSX\EpiOAuthBadRequestException($message, $response->code);
       case 401:
-        throw new EpiOAuthUnauthorizedException($message, $response->code);
+        throw new \SSX\EpiOAuthUnauthorizedException($message, $response->code);
       default:
-        throw new EpiOAuthException($message, $response->code);
+        throw new \SSX\EpiOAuthException($message, $response->code);
     }
   }
 }

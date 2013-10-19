@@ -3,12 +3,15 @@
  *  Class to integrate with Twitter's API.
  *    Authenticated calls are done using OAuth and require access tokens for a user.
  *    API calls which do not require authentication do not require tokens (i.e. search/trends)
- * 
+ *
  *  Full documentation available on github
  *    http://wiki.github.com/jmathai/twitter-async
- * 
+ *
  *  @author Jaisen Mathai <jaisen@jmathai.com>
  */
+
+namespace SSX;
+
 class EpiTwitter extends EpiOAuth
 {
   const EPITWITTER_SIGNATURE_METHOD = 'HMAC-SHA1';
@@ -149,7 +152,7 @@ class EpiTwitter extends EpiOAuth
     if(!empty($username) && !empty($password))
       curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
 
-    $resp = new EpiTwitterJson(EpiCurl::getInstance()->addCurl($ch), $this->debug);
+    $resp = new \SSX\EpiTwitterJson(EpiCurl::getInstance()->addCurl($ch), $this->debug);
     if(!$this->isAsynchronous)
       $resp->response;
 
@@ -157,7 +160,7 @@ class EpiTwitter extends EpiOAuth
   }
 }
 
-class EpiTwitterJson implements ArrayAccess, Countable, IteratorAggregate
+class EpiTwitterJson implements \ArrayAccess, \Countable, \IteratorAggregate
 {
   private $debug;
   private $__resp;
@@ -177,9 +180,9 @@ class EpiTwitterJson implements ArrayAccess, Countable, IteratorAggregate
   public function getIterator ()
   {
     if ($this->__obj) {
-      return new ArrayIterator($this->__obj);
+      return new \ArrayIterator($this->__obj);
     } else {
-      return new ArrayIterator($this->response);
+      return new \ArrayIterator($this->response);
     }
   }
 
@@ -188,28 +191,28 @@ class EpiTwitterJson implements ArrayAccess, Countable, IteratorAggregate
   {
     return count($this->response);
   }
-  
+
   // Next four functions are to support ArrayAccess interface
   // 1
-  public function offsetSet($offset, $value) 
+  public function offsetSet($offset, $value)
   {
     $this->response[$offset] = $value;
   }
 
   // 2
-  public function offsetExists($offset) 
+  public function offsetExists($offset)
   {
     return isset($this->response[$offset]);
   }
-  
+
   // 3
-  public function offsetUnset($offset) 
+  public function offsetUnset($offset)
   {
     unset($this->response[$offset]);
   }
 
   // 4
-  public function offsetGet($offset) 
+  public function offsetGet($offset)
   {
     return isset($this->response[$offset]) ? $this->response[$offset] : null;
   }
@@ -250,7 +253,7 @@ class EpiTwitterJson implements ArrayAccess, Countable, IteratorAggregate
   }
 }
 
-class EpiTwitterException extends Exception 
+class EpiTwitterException extends \Exception
 {
   public static function raise($response, $debug)
   {
@@ -258,25 +261,25 @@ class EpiTwitterException extends Exception
     switch($response->code)
     {
       case 400:
-        throw new EpiTwitterBadRequestException($message, $response->code);
+        throw new \SSX\EpiTwitterBadRequestException($message, $response->code);
       case 401:
-        throw new EpiTwitterNotAuthorizedException($message, $response->code);
+        throw new \SSX\EpiTwitterNotAuthorizedException($message, $response->code);
       case 403:
-        throw new EpiTwitterForbiddenException($message, $response->code);
+        throw new \SSX\EpiTwitterForbiddenException($message, $response->code);
       case 404:
-        throw new EpiTwitterNotFoundException($message, $response->code);
+        throw new \SSX\EpiTwitterNotFoundException($message, $response->code);
       case 406:
-        throw new EpiTwitterNotAcceptableException($message, $response->code);
+        throw new \SSX\EpiTwitterNotAcceptableException($message, $response->code);
       case 420:
-        throw new EpiTwitterEnhanceYourCalmException($message, $response->code);
+        throw new \SSX\EpiTwitterEnhanceYourCalmException($message, $response->code);
       case 500:
-        throw new EpiTwitterInternalServerException($message, $response->code);
+        throw new \SSX\EpiTwitterInternalServerException($message, $response->code);
       case 502:
-        throw new EpiTwitterBadGatewayException($message, $response->code);
+        throw new \SSX\EpiTwitterBadGatewayException($message, $response->code);
       case 503:
-        throw new EpiTwitterServiceUnavailableException($message, $response->code);
+        throw new \SSX\EpiTwitterServiceUnavailableException($message, $response->code);
       default:
-        throw new EpiTwitterException($message, $response->code);
+        throw new \SSX\EpiTwitterException($message, $response->code);
     }
   }
 }

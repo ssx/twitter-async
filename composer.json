@@ -12,9 +12,11 @@
             "email": "jaisen@jmathai.com"
         }
     ],
-    "require": {},
+	"require": {
+        "ext-curl": "*"
+    },
     "autoload": {
-        "classmap": ["./"]
+        "classmap": ["src/"]
     },
 	"license": "BSD"
 }
