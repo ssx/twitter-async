@@ -18,5 +18,5 @@
     "autoload": {
         "classmap": ["src/"]
     },
-	"license": "BSD"
+    "license": "Apache-2.0"
 }
